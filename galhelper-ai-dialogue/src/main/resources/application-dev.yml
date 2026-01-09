@@ -1,0 +1,65 @@
+server:
+  port: 8001
+  servlet:
+    context-path: /ai-dialogue
+
+langchain4j:
+  open-ai:
+    chat-model:
+      # 应用程序发送给大模型的请求日志和响应日志
+      log-requests: true
+      log-responses: true
+
+      # 使用小米mimo的mimo-v2-flash模型（暂时免费）
+      base-url: https://api.xiaomimimo.com/v1
+      api-key: sk-coyis5akxezcelxtkot3jrbc2fmxn0j4xb6j2r5wj2zmvfod
+      model-name: mimo-v2-flash
+  # TODO 缺少向量模型
+
+spring:
+  application:
+    name: galhelper_ai-dialogue
+  datasource:
+    # 基础连接配置
+    # 数据库的连接信息需要改成自己的
+    url: jdbc:postgresql://localhost:5433/gal_helper_db
+    username: postgres
+    password: abc123
+    driver-class-name: org.postgresql.Driver
+
+    # HikariCP 核心调优
+    hikari:
+      # 1. 连接池大小：建议公式 (CPU核心数 * 2) + 有效磁盘数
+      maximum-pool-size: 5
+      # 2. 最小空闲连接：建议与 max 保持一致（Fixed Pool），减少扩容抖动
+      minimum-idle: 5
+      # 3. 等待连接池分配连接的最大时长（毫秒）
+      connection-timeout: 30000
+      # 4. 连接在池中保持空闲而不被回收的最大时长
+      idle-timeout: 600000
+      # 5. 连接的最大生命周期：必须小于数据库端的 wait_timeout（PG默认非常长，30分钟是安全值）
+      max-lifetime: 1800000
+      # 6. 测试连接有效性的超时时间
+      validation-timeout: 5000
+      # 7. 用于测试连接的 SQL（PG 推荐使用简单查询）
+      connection-test-query: SELECT 1
+      # 8. 属性名称，方便在 JMX 监控中识别
+      pool-name: AiDialogueHikariCP
+
+  servlet:
+    multipart:
+      max-file-size: 100MB #单个文件上传大小
+      max-request-size: 500MB #连续上传文件大小
+
+mybatis:
+  configuration:
+    cache-enabled: false
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  mapper-locations: classpath:main/postgresql/**/*.xml
+
+logging:
+  config: classpath:config/log4j2.xml
+  level:
+    # 核心：只给你的 Mapper 接口包开启 DEBUG
+    com.galhelper.mapper: debug
