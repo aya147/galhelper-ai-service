@@ -1,5 +1,8 @@
 package com.galhelper.dialogue.service;
 
+import com.galhelper.dialogue.common.model.DialogueContext;
+import dev.langchain4j.service.TokenStream;
+
 /**
  * ClassName: DialogueService
  * Package: com.galhelper.dialogue.service
@@ -11,5 +14,9 @@ package com.galhelper.dialogue.service;
  */
 public interface DialogueService {
 
-    String dialogue(Long dialogueId, String dialogueTxt);
+    DialogueContext handleDialogue(Long conversationId, String dialogueTxt);
+
+    Long storeUserMessage(Long conversationId, String messageText);
+
+    void storeAiMessage(Long conversationId, Long userMessageId, String messageText);
 }

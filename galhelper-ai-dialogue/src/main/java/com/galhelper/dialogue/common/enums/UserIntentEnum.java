@@ -17,7 +17,12 @@ public enum UserIntentEnum {
     GAME_ERROR(1, "游戏的安装&运行的报错"),
     GAME_RECOMMEND(2, "游戏推荐和找符合条件的游戏"),
     RESOURCE_AND_INFO(3, "游戏资源站&资讯网站"),
-    TECH_SOFTWARE(4, "游戏相关软件的使用和技术探讨");
+    TECH_SOFTWARE(4, "游戏相关软件的使用和技术探讨"),
+
+
+    // 其他情况
+    VAGUE(98, "意图模糊需要引导"),
+    UNSUPPORTED(99, "超纲需求/无法实现");
 
     private Integer code;
 

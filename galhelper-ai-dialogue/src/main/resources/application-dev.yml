@@ -2,6 +2,10 @@ server:
   port: 8001
   servlet:
     context-path: /ai-dialogue
+    encoding:
+      charset: utf-8
+      enable: true
+      force: true
 
 langchain4j:
   open-ai:
@@ -12,7 +16,16 @@ langchain4j:
 
       # 使用小米mimo的mimo-v2-flash模型（暂时免费）
       base-url: https://api.xiaomimimo.com/v1
-      api-key: sk-coyis5akxezcelxtkot3jrbc2fmxn0j4xb6j2r5wj2zmvfod
+      api-key: ${XIAOMIMIMO_API_KEY}
+      model-name: mimo-v2-flash
+    streaming-chat-model:
+      # 应用程序发送给大模型的请求日志和响应日志
+      log-requests: true
+      log-responses: true
+
+      # 使用小米mimo的mimo-v2-flash模型（暂时免费）
+      base-url: https://api.xiaomimimo.com/v1
+      api-key: ${XIAOMIMIMO_API_KEY}
       model-name: mimo-v2-flash
   # TODO 缺少向量模型
 
@@ -23,8 +36,8 @@ spring:
     # 基础连接配置
     # 数据库的连接信息需要改成自己的
     url: jdbc:postgresql://localhost:5433/gal_helper_db
-    username: postgres
-    password: abc123
+    username: gal_admin
+    password: PHblJ7IvI5b6uy04
     driver-class-name: org.postgresql.Driver
 
     # HikariCP 核心调优
@@ -52,6 +65,8 @@ spring:
       max-request-size: 500MB #连续上传文件大小
 
 mybatis:
+  # 扫描handler的包路径
+  type-handlers-package: com.galhelper.common.handler
   configuration:
     cache-enabled: false
     map-underscore-to-camel-case: true
