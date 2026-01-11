@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <!-- 上下文配置 -->
+    <context id="Default" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+
+        <!-- 插件配置：为继承的BaseMapper接口添加对应的实现类 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin"/>
+
+        <!-- 数据库连接配置 -->
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                        connectionURL="jdbc:postgresql://localhost:5433/gal_helper_db"
+                        userId="gal_admin"
+                        password="PHblJ7IvI5b6uy04">
+        </jdbcConnection>
+
+        <!-- 实体类生成配置 -->
+        <javaModelGenerator targetPackage="com.galhelper.dialogue.model.entity" targetProject="galhelper-ai-dialogue/src/test/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+<!--            <property name="rootClass" value="com.example.project.domain.BaseEntity"/>-->
+        </javaModelGenerator>
+
+        <!-- SQL映射文件生成配置 -->
+        <sqlMapGenerator targetPackage="dialogue" targetProject="galhelper-ai-dialogue/src/main/resources/main/postgresql">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- Mapper接口生成配置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.galhelper.dialogue.mapper" targetProject="galhelper-ai-dialogue/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+<!--            <property name="rootInterface" value="com.example.project.mapper.BaseMapper"/>-->
+        </javaClientGenerator>
+
+        <!-- 表配置示例 -->
+        <table tableName="ai_message_info" domainObjectName="AiMessageInfo" modelType="flat">
+            <generatedKey column="id" sqlStatement="PostgreSQL" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>
