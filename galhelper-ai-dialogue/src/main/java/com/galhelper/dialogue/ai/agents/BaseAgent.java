@@ -4,6 +4,7 @@ import com.galhelper.dialogue.common.enums.UserIntentEnum;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
+import reactor.core.publisher.Flux;
 
 /**
  * ClassName: BaseAgent
@@ -21,7 +22,7 @@ public interface BaseAgent {
      * @param message
      * @return
      */
-    TokenStream chat(@MemoryId Long conversationId, @UserMessage String message);
+    Flux<String> chat(@MemoryId Long conversationId, @UserMessage String message);
     /**
      * 获取当前Agent的标识
      * @return

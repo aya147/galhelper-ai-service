@@ -15,25 +15,33 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@Table(name = "ai_conversation_info")
+@Table(name = "ai_chat_session_info")
 @Schema(name = "会话信息类", description = "会话信息类")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AiConversationInfo implements Serializable {
+public class AiChatSessionInfo implements Serializable {
 
     @Id
     @Schema(name = "id")
     @Column(name = "id")
     private Long id;
 
+    @Schema(name = "会话编码")
+    @Column(name = "chat_session_code")
+    private String ChatSessionCode;
+
     @Schema(name = "用户意图")
     @Column(name = "user_intent")
     private Integer userIntent;
 
     @Schema(name = "会话记忆")
-    @Column(name = "conversation_memory")
-    private List<ChatMessage> conversationMemory;
+    @Column(name = "chat_session_memory")
+    private List<ChatMessage> chatSessionMemory;
+
+    @Schema(name = "当前消息序列")
+    @Column(name = "current_message_id")
+    private Long currentMessageId;
 
     @Schema(name = "创建时间")
     @Column(name = "create_time")

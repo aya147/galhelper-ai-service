@@ -1,10 +1,8 @@
 package com.galhelper.dialogue.ai.store;
 
-import com.galhelper.dialogue.mapper.AiConversationInfoMapper;
-import com.galhelper.dialogue.model.entity.AiConversationInfo;
+import com.galhelper.dialogue.mapper.AiChatSessionInfoMapper;
+import com.galhelper.dialogue.model.entity.AiChatSessionInfo;
 import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.ChatMessageDeserializer;
-import dev.langchain4j.data.message.ChatMessageSerializer;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -27,26 +25,26 @@ import java.util.List;
 public class PostgreChatMemoryStore implements ChatMemoryStore {
 
     @Resource
-    private AiConversationInfoMapper conversationMapper;
+    private AiChatSessionInfoMapper conversationMapper;
 
     @Override
     public List<ChatMessage> getMessages(Object memoryId) {
         Long conversationId = (Long) memoryId;
 
         // 从数据库读取 AiConversationInfo 实体
-        AiConversationInfo entity = conversationMapper.selectByPrimaryKey(conversationId);
+        AiChatSessionInfo entity = conversationMapper.selectByPrimaryKey(conversationId);
 
-        return (entity != null && entity.getConversationMemory() != null)
-                ? entity.getConversationMemory()
+        return (entity != null && entity.getChatSessionMemory() != null)
+                ? entity.getChatSessionMemory()
                 : Collections.emptyList();
     }
 
     @Override
     public void updateMessages(Object memoryId, List<ChatMessage> messages) {
-        AiConversationInfo updateRecord = new AiConversationInfo();
+        AiChatSessionInfo updateRecord = new AiChatSessionInfo();
 
         updateRecord.setId((Long) memoryId);
-        updateRecord.setConversationMemory(messages);
+        updateRecord.setChatSessionMemory(messages);
         updateRecord.setUpdateTime(new Date());
 
         conversationMapper.updateByPrimaryKeySelective(updateRecord);

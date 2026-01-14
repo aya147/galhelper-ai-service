@@ -26,30 +26,30 @@ public class AiMessageInfo implements Serializable {
     private Long id;
 
     @Schema(name = "会话id")
-    @Column(name = "fk_conversation_id")
-    private Long fkConversationId;
+    @Column(name = "fk_session_id")
+    private Long fkSessionId;
 
-    @Schema(name = "对应的消息id，AI回应用户")
-    @Column(name = "fk_message_id")
-    private Long fkMessageId;
+    @Schema(name = "在当前会话中的消息序列")
+    @Column(name = "messageId")
+    private Long messageId;
 
-    @Schema(name = "发送方类型 1用户|2AI")
-    @Column(name = "sender_type")
-    private Integer senderType;
+    @Schema(name = "当前会话的父消息序列")
+    @Column(name = "parent_id")
+    private Long parentId;
 
-    @Schema(name = "接收方类型 1用户|2AI")
-    @Column(name = "receiver_type")
-    private Integer receiverType;
+    @Schema(name = "角色 例如 USER、ASSISTANT")
+    @Column(name = "role")
+    private String role;
 
     @Schema(name = "消息内容")
     @Column(name = "message")
     private String message;
 
-    @Schema(name = "发送时间")
-    @Column(name = "send_time")
+    @Schema(name = "创建时间")
+    @Column(name = "create_time")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date sendTime;
+    private Date createTime;
 
 
     private static final long serialVersionUID = 1002L;

@@ -7,6 +7,7 @@ import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 import dev.langchain4j.service.spring.AiService;
 import dev.langchain4j.service.spring.AiServiceWiringMode;
+import reactor.core.publisher.Flux;
 
 /**
  * ClassName: ResourceInfoAgent
@@ -26,7 +27,7 @@ public interface ResourceInfoAgent extends BaseAgent {
 
     @Override
     @UserMessage("你是一个gal领域大神，请根据用户的需求，获取该资源相关的信息。用户的需求是：{{message}}")
-    TokenStream chat(@MemoryId Long conversationId, @V("message") String userMessage);
+    Flux<String> chat(@MemoryId Long conversationId, @V("message") String userMessage);
 
     @Override
     default UserIntentEnum getIdentify() { return UserIntentEnum.RESOURCE_AND_INFO; }

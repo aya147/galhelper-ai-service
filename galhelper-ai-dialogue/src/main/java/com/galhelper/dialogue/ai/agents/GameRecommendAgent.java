@@ -7,6 +7,7 @@ import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 import dev.langchain4j.service.spring.AiService;
 import dev.langchain4j.service.spring.AiServiceWiringMode;
+import reactor.core.publisher.Flux;
 
 /**
  * ClassName: GameRecommendAgent
@@ -26,7 +27,7 @@ public interface GameRecommendAgent extends BaseAgent {
 
     @Override
     @UserMessage("你是一个gal领域大神，请根据用户的对话内容，推荐一个合适的游戏。用户的对话内容：{{message}}")
-    TokenStream chat(@MemoryId Long conversationId, @V("message") String userMessage);
+    Flux<String> chat(@MemoryId Long conversationId, @V("message") String userMessage);
 
     @Override
     default UserIntentEnum getIdentify() { return UserIntentEnum.GAME_RECOMMEND; }

@@ -25,6 +25,8 @@
         <mybatis-generator.version>1.4.0</mybatis-generator.version>
         <!-- 日志异步高性能库 -->
         <lmax.version>3.4.2</lmax.version>
+        <!-- uuid生成库 -->
+        <uuid-creator.version>6.1.1</uuid-creator.version>
     </properties>
 
     <dependencies>
@@ -130,18 +132,24 @@
 <!--            <artifactId>langchain4j-pgvector</artifactId>-->
 <!--        </dependency>-->
         <!--流式输出-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-webflux</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>dev.langchain4j</groupId>-->
-<!--            <artifactId>langchain4j-reactor</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-reactor</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.f4b6a3</groupId>
+            <artifactId>uuid-creator</artifactId>
+            <version>${uuid-creator.version}</version>
         </dependency>
 
         <dependency>
