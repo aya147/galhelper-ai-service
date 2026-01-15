@@ -51,6 +51,11 @@ public class AiMessageInfo implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @Schema(name = "修改时间")
+    @Column(name = "update_time")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
     private static final long serialVersionUID = 1002L;
 

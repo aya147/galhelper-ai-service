@@ -19,4 +19,6 @@ public interface ChatService {
     Long storeUserMessage(AiChatSessionInfo aiChatSessionInfo, Long parentMessageId, String messageText);
 
     Long storeAiMessage(AiChatSessionInfo aiChatSessionInfo, Long parentMessageId, String messageText);
+
+    Object updateAiMessage(AiChatSessionInfo aiChatSessionInfo, Long aiMessageId, String finalContent);
 }

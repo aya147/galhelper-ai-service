@@ -6,7 +6,6 @@ import com.galhelper.dialogue.common.enums.RoleEnum;
 import com.galhelper.dialogue.common.enums.UserIntentEnum;
 import com.galhelper.dialogue.common.utils.CommonTools;
 import com.galhelper.dialogue.common.utils.IdUtils;
-import com.galhelper.dialogue.common.utils.TokenStreamUtils;
 import com.galhelper.dialogue.mapper.AiChatSessionInfoMapper;
 import com.galhelper.dialogue.mapper.AiMessageInfoMapper;
 import com.galhelper.dialogue.model.IntentResult;
@@ -78,6 +77,13 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Long storeAiMessage(AiChatSessionInfo aiChatSessionInfo, Long parentMessageId, String messageText) {
         return this.storeMessageInfo(aiChatSessionInfo, parentMessageId, messageText, RoleEnum.ASSISTANT);
+    }
+
+    @Override
+    public Object updateAiMessage(AiChatSessionInfo aiChatSessionInfo, Long aiMessageId, String finalContent) {
+        Date date = new Date();
+        aiMessageInfoMapper.updateMessageContentBySession(aiChatSessionInfo.getId(), aiMessageId, finalContent, date);
+        return date;
     }
 
     private Long storeMessageInfo(AiChatSessionInfo chatSessionInfo, Long parentMessageId, String messageText, RoleEnum role) {

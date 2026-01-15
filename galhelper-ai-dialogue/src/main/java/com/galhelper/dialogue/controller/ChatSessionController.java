@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2026/1/13 - 9:39
  * @project galhelper-ai-service
  */
-@Tag(name = "gal求助吧 AI对话助手会话", description = "会话")
+@Tag(name = "AI对话助手会话接口", description = "会话")
 @Slf4j
 @RequestMapping("/chat_session")
 @RestController

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.Collections;
 import java.util.Date;
@@ -33,7 +35,7 @@ import java.util.Objects;
  * @project galhelper-ai-service
  */
 @Slf4j
-@Tag(name = "gal求助吧 AI对话助手对话", description = "对话")
+@Tag(name = "AI对话助手对话接口", description = "对话")
 @RequestMapping("/chat")
 @RestController
 public class ChatController extends BaseController {
@@ -45,7 +47,7 @@ public class ChatController extends BaseController {
     @Resource
     private ChatSessionService chatSessionService;
 
-//    // TODO 1、返回给用户的消息出现了重复问题排查 2、优化prompt 3、重写响应式逻辑 4、可能会重新构造agent之间的调用逻辑
+//   TODO 1、优化prompt 2、可能会重新构造agent之间的调用逻辑
     @Operation(summary = "AI对话问答", description = "向AI助手提问并获取回答")
     @RequestMapping(value = "/completion", method = RequestMethod.POST, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<Object>> ask(
@@ -68,7 +70,7 @@ public class ChatController extends BaseController {
         // --- 事件 2: update_session ---
         Date updateChatSessionMessageIdDate = new Date();
         chatService.storeUserMessage(chatSessionInfo, currentMessageId, askText);
-        chatService.storeAiMessage(chatSessionInfo, nextMessageId, null);
+        Long aiMessageId = chatService.storeAiMessage(chatSessionInfo, nextMessageId, null);
 
         chatSessionService.updateChatSessionMessageId(nextMessageId + 1, chatSessionInfo.getId(), updateChatSessionMessageIdDate);
         Flux<ServerSentEvent<Object>> updateSessionEvent = Flux.just(
@@ -80,7 +82,9 @@ public class ChatController extends BaseController {
 
         // --- 事件 3: AI 内容流 (message) ---
         // 这里使用 assistant.chat 返回的 Flux<String>
+        StringBuilder stringBuilder = new StringBuilder();
         Flux<ServerSentEvent<Object>> contentStream = chatService.chatToAI(chatSessionInfo, askText)
+                .doOnNext(stringBuilder::append)
                 .map(token -> ServerSentEvent.builder()
                         // 注意：DeepSeek 的内容流有时不带 event 标签，默认为 message
                         .data(Map.of("p", "content", "v", token))
@@ -95,6 +99,19 @@ public class ChatController extends BaseController {
         );
 
         // --- 事件 5: update_session ---
+        Flux<ServerSentEvent<Object>> updateEventStream = Flux.defer(() -> {
+            String finalContent = stringBuilder.toString();
+            // 使用 fromCallable 包装阻塞方法，它能捕捉 return 的值
+            return Mono.fromCallable(() -> {
+                // 执行阻塞保存，并拿到返回值 result
+                return chatService.updateAiMessage(chatSessionInfo, aiMessageId, finalContent);
+            })
+                .subscribeOn(Schedulers.boundedElastic())
+                .map(updateTime -> ServerSentEvent.builder()
+                    .event(AiEvents.UPDATE_SESSION.getEvent())
+                    .data(Map.of("updated_at", updateTime))
+                    .build());
+        });
 
         // --- 事件 6: close ---
         Flux<ServerSentEvent<Object>> closeEvent = Flux.just(
@@ -110,6 +127,7 @@ public class ChatController extends BaseController {
                 updateSessionEvent,
                 contentStream,
                 finishEvent,
+                updateEventStream,
                 closeEvent
         ).onErrorResume(e -> Flux.just(
                 ServerSentEvent.builder()
